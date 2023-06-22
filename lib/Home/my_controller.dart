@@ -20,6 +20,7 @@ class MyController extends GetxController {
   String? msg;
   String? date;
   File? temp;
+  int? generalIndex;
 
   pickImageFromCamera() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);

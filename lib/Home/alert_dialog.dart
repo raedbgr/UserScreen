@@ -96,7 +96,10 @@ class _AddUserDialogState extends State<AddUserDialog> {
           child: gxc.isExist ? const Text('Update') : const Text('Add'),
           onPressed: () async {
             if (_nameController.text.isEmpty || _ageController.text.isEmpty) {
-              Get.snackbar('Error', 'Please enter name and age');
+              const snackBar = SnackBar(
+                content: Text('Please add your name and age!'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               return; // return to User Model
             }
             else {

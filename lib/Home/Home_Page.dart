@@ -3,6 +3,7 @@ import 'package:untitled/Home/alert_dialog.dart';
 import 'package:get/get.dart';
 import 'package:untitled/Home/bottom_sheet.dart';
 import 'package:untitled/Home/my_controller.dart';
+import 'package:untitled/Home/search_users.dart';
 import '../Models/user.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,6 +35,7 @@ class _HomePage extends State<HomePage> {
       itemBuilder: (BuildContext context, int index) {
         Eluser user = gxc.userList[index];
         bool isSelected = selectedUsers.contains(user);
+        gxc.generalIndex = index;
 
         return GestureDetector(
           onTap: () {
@@ -141,6 +143,11 @@ class _HomePage extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Users'),
+        leading: IconButton(
+            onPressed: (){
+              showSearch(context: context, delegate: SearchUser());
+            },
+            icon: Icon(Icons.search)),
         actions: [
           IconButton(
               onPressed: () {
