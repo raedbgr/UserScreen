@@ -38,6 +38,23 @@ class _HomePage extends State<HomePage> {
         gxc.generalIndex = index;
 
         return GestureDetector(
+          onLongPress: (){
+            setState(() {
+              isSelectionMode = !isSelectionMode;
+              if (!isSelectionMode) {
+                selectedUsers.clear();
+              }
+              // edit here ------
+              if (isSelectionMode) {
+                if (isSelected) {
+                  selectedUsers.remove(user);
+                } else {
+                  selectedUsers.add(user);
+                }
+              }
+              // ----------------
+            });
+          },
           onTap: () {
             setState(() {
               if (isSelectionMode) {
@@ -149,16 +166,7 @@ class _HomePage extends State<HomePage> {
             },
             icon: Icon(Icons.search)),
         actions: [
-          IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return MyBotSheet();
-                    });
-              },
-              icon: const Icon(Icons.history)),
-          IconButton(
+          isSelectionMode ? IconButton(
             onPressed: () {
               setState(() {
                 isSelectionMode = !isSelectionMode;
@@ -167,8 +175,8 @@ class _HomePage extends State<HomePage> {
                 }
               });
             },
-            icon: Icon(isSelectionMode ? Icons.close : Icons.select_all),
-          ),
+            icon: Icon(Icons.close),
+          ) : Container(),
           IconButton(
             onPressed: () {
               if (selectedUsers.isNotEmpty) {
@@ -185,7 +193,15 @@ class _HomePage extends State<HomePage> {
                             for (Eluser user in selectedUsers) {
                               gxc.removeUser(user);
                             }
-                            selectedUsers.clear();
+                            // edited here -------
+                            setState(() {
+                              isSelectionMode = !isSelectionMode;
+                              if (!isSelectionMode) {
+                                selectedUsers.clear();
+                              }
+                            });
+                            // -------------
+                            // selectedUsers.clear();
                             Get.back();
                           },
                           child: const Text('Remove'),
@@ -204,6 +220,15 @@ class _HomePage extends State<HomePage> {
             },
             icon: const Icon(Icons.delete),
           ),
+          IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return MyBotSheet();
+                    });
+              },
+              icon: const Icon(Icons.history)),
         ],
       ),
       floatingActionButton: FloatingActionButton(
