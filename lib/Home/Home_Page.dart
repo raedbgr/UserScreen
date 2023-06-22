@@ -38,7 +38,7 @@ class _HomePage extends State<HomePage> {
         gxc.generalIndex = index;
 
         return GestureDetector(
-          onLongPress: (){
+          onLongPress: () {
             setState(() {
               isSelectionMode = !isSelectionMode;
               if (!isSelectionMode) {
@@ -75,21 +75,32 @@ class _HomePage extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    // edit here -----
                     user.pic != null
                         ? Expanded(
                             flex: 2,
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(width: 2),
-                                image: DecorationImage(
-                                  image: FileImage(user.pic!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                            child: gxc.isLoading == true
+                                ? Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(width: 2),
+                                    ),
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(width: 2),
+                                      image: DecorationImage(
+                                        image: FileImage(user.pic!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
                           )
                         : Expanded(
                             flex: 2,
@@ -101,6 +112,33 @@ class _HomePage extends State<HomePage> {
                                   border: Border.all(width: 2)),
                             ),
                           ),
+                    // ---------------
+                    // user.pic != null
+                    //     ? Expanded(
+                    //         flex: 2,
+                    //         child: Container(
+                    //           width: 100,
+                    //           height: 100,
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.circle,
+                    //             border: Border.all(width: 2),
+                    //             image: DecorationImage(
+                    //               image: FileImage(user.pic!),
+                    //               fit: BoxFit.cover,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Expanded(
+                    //         flex: 2,
+                    //         child: Container(
+                    //           width: 100,
+                    //           height: 100,
+                    //           decoration: BoxDecoration(
+                    //               shape: BoxShape.circle,
+                    //               border: Border.all(width: 2)),
+                    //         ),
+                    //       ),
                     const SizedBox(
                       width: 15,
                     ),
@@ -161,22 +199,24 @@ class _HomePage extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Users'),
         leading: IconButton(
-            onPressed: (){
+            onPressed: () {
               showSearch(context: context, delegate: SearchUser());
             },
             icon: Icon(Icons.search)),
         actions: [
-          isSelectionMode ? IconButton(
-            onPressed: () {
-              setState(() {
-                isSelectionMode = !isSelectionMode;
-                if (!isSelectionMode) {
-                  selectedUsers.clear();
-                }
-              });
-            },
-            icon: Icon(Icons.close),
-          ) : Container(),
+          isSelectionMode
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isSelectionMode = !isSelectionMode;
+                      if (!isSelectionMode) {
+                        selectedUsers.clear();
+                      }
+                    });
+                  },
+                  icon: Icon(Icons.close),
+                )
+              : Container(),
           IconButton(
             onPressed: () {
               if (selectedUsers.isNotEmpty) {

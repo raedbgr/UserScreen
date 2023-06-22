@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled/Home/my_controller.dart';
 
+import '../Models/updates.dart';
+
 class AddUserDialog extends StatefulWidget {
   @override
   _AddUserDialogState createState() => _AddUserDialogState();
@@ -78,6 +80,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                   ),
                 ],
               ),
+              SizedBox(height: 15,),
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
@@ -92,6 +95,13 @@ class _AddUserDialogState extends State<AddUserDialog> {
         }
       ),
       actions: [
+        TextButton(
+            onPressed: (){
+              // show updates related to this user only
+              _showUserUpdates();
+            },
+            child: Text('Show Updates')),
+        SizedBox(width: 10,),
         TextButton(
           child: gxc.isExist ? const Text('Update') : const Text('Add'),
           onPressed: () async {
@@ -128,4 +138,50 @@ class _AddUserDialogState extends State<AddUserDialog> {
       ],
     );
   }
+
+  void _showUserUpdates() {
+    final List<updateMod> userUpdates = gxc.updateList.where((update) {
+      // Check if the update is related to the user
+      return update.msg!.contains(gxc.oldUser.name!);
+    }).toList();
+
+    // bottom sheet for the updates related to a single user card
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: double.infinity,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                color: Colors.blue,
+                padding: const EdgeInsets.all(10),
+                child: Expanded(
+                  child: const Text(
+                    'User History',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: userUpdates.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(userUpdates[index].msg!),
+                      subtitle: Text(userUpdates[index].date!),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
 }
