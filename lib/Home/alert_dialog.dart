@@ -125,27 +125,19 @@ class _AddUserDialogState extends State<AddUserDialog> {
               return; // return to User Model
             } else {
               if (gxc.isExist) {
-                if (_nameController.text != gxc.oldUser.name ||
-                    int.parse(_ageController.text) != gxc.oldUser.age ||
-                    gxc.imageFile != gxc.oldUser.pic) {
-                  gxc.updateUser(
-                    _nameController.text,
-                    int.parse(_ageController.text),
-                    gxc.imageFile,
-                  );
-                  gxc.imageFile = null;
-                  gxc.isExist = false;
-                } else {
-                  const snackBar = SnackBar(
-                    content: Text('You did not update anything!'),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
+                gxc.updateUser(
+                  gxc.oldUser.id!,
+                  _nameController.text,
+                  int.parse(_ageController.text),
+                  gxc.imageFile,
+                );
+                gxc.imageFile = null;
+                gxc.isExist = false;
               } else {
                 DateTime dateTime = DateTime.now();
 
                 String formattedDateTime =
-                    DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
                 gxc.addUser(
                     _nameController.text,
@@ -171,7 +163,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   void _showUserUpdates() {
     final List<updateMod> userUpdates = gxc.updateList.where((update) {
       // Check if the update is related to the user
-      return update.msg!.contains(gxc.oldUser.name!);
+      return update.userId == gxc.oldUser.id;
     }).toList();
 
     // bottom sheet for the updates related to a single user card

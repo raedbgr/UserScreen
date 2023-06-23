@@ -138,9 +138,7 @@ class _HomePage extends State<HomePage> {
                             // dialog instance
                             gxc.isExist = true;
                             gxc.indx = index;
-                            gxc.oldUser.name = user.name;
-                            gxc.oldUser.age = user.age;
-                            gxc.oldUser.pic = user.pic;
+                            gxc.oldUser = user;
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {

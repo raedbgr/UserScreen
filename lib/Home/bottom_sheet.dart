@@ -58,8 +58,8 @@ class _MyBotSheetState extends State<MyBotSheet> {
                       updateMod update = reversedList[index];
 
                       return ListTile(
-                        title: Text('${update.msg}'),
-                        subtitle: Text('${update.date}'),
+                        title: Text(update.msg ?? ''),
+                        subtitle: Text(update.date ?? ''),
                       );
                     }),
               )

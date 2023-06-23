@@ -1,12 +1,14 @@
 import 'dart:io';
 
 class Eluser {
+  int? id;
   String? name;
   int? age;
   File? pic;
   String? date;
 
   Eluser({
+    this.id = 0,
     this.name = "N/A",
     this.age = 0,
     this.pic = null,

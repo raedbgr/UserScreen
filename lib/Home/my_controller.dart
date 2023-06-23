@@ -21,6 +21,7 @@ class MyController extends GetxController {
   String? date;
   File? temp;
   int? generalIndex;
+  int _nextId = 1;
 
   pickImageFromCamera() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
@@ -31,27 +32,33 @@ class MyController extends GetxController {
   }
 
   void addUser(String name, int age, String date, [File? pic]) {
-    Eluser user = Eluser(name: name, age: age, date: date, pic: pic);
+    Eluser user = Eluser(id: _nextId, name: name, age: age, date: date, pic: pic);
     userList.add(user);
+    _nextId++;
     imageFile = null;
     savePrefs(); // save after adding new users
     update();
   }
 
-  void updateUser(String name, int age, File? pic) {
-    Eluser? userToUpdate = userList[indx!];
+  void updateUser(int userId, String name, int age, File? pic) {
+    Eluser? userToUpdate = userList.firstWhere((user) => user.id == userId,);
 
     if (userToUpdate != null) {
+      oldUser = Eluser(
+        id: userToUpdate.id,
+        name: userToUpdate.name,
+        age: userToUpdate.age,
+        date: userToUpdate.date,
+        pic: userToUpdate.pic,
+      );
       userToUpdate.updateName(name);
       userToUpdate.updateAge(age);
       if (pic != null) userToUpdate.updatePic(pic);
       savePrefs();
-
       // return date of update formatted
       DateTime dateTime = DateTime.now();
       String formattedDateTime =
           DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
-
       //------------------------------------
       Eluser? updatedUser = userList[indx!];
       String updatedField = '';
@@ -79,22 +86,21 @@ class MyController extends GetxController {
       } else if (updatedUser.name != oldUser.name) {
         updatedField = 'Name';
       }
-
       msg = '${_getUpdate(updatedField, updatedUser)}';
       date = formattedDateTime;
-      updateMod upd = updateMod();
-      upd.msg = msg;
-      upd.date = date;
-      updateList.add(upd);
+      updateMod upd = updateMod(userId: userId, msg: msg, date: date);
+      if (upd.msg != '') {
+        updateList.add(upd);
+      }
       saveHistoryPrefs(updateList);
       //------------------------------------
-
       update();
     }
   }
 
   void removeUser(Eluser user) {
     userList.remove(user);
+    saveHistoryPrefs(updateList);
     savePrefs();
     update();
   }
