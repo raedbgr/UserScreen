@@ -40,6 +40,6 @@ class Eluser {
   }
 
   void updatePic(File newPic) {
-   if(newPic!= null) pic = newPic;
+    if (newPic != null) pic = newPic;
   }
 }

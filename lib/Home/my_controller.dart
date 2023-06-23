@@ -30,8 +30,8 @@ class MyController extends GetxController {
     update();
   }
 
-  void addUser (String name, int age, File pic, String date){
-    Eluser user = Eluser(name: name, age: age, pic: pic, date: date);
+  void addUser(String name, int age, String date, [File? pic]) {
+    Eluser user = Eluser(name: name, age: age, date: date, pic: pic);
     userList.add(user);
     imageFile = null;
     savePrefs(); // save after adding new users
@@ -49,19 +49,25 @@ class MyController extends GetxController {
 
       // return date of update formatted
       DateTime dateTime = DateTime.now();
-      String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+      String formattedDateTime =
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
       //------------------------------------
       Eluser? updatedUser = userList[indx!];
       String updatedField = '';
 
-      if (updatedUser.name != oldUser.name && updatedUser.age != oldUser.age && updatedUser.pic != oldUser.pic) {
+      if (updatedUser.name != oldUser.name &&
+          updatedUser.age != oldUser.age &&
+          updatedUser.pic != oldUser.pic) {
         updatedField = 'NameAgePic';
-      } else if (updatedUser.age != oldUser.age && updatedUser.pic != oldUser.pic) {
+      } else if (updatedUser.age != oldUser.age &&
+          updatedUser.pic != oldUser.pic) {
         updatedField = 'agePic';
-      } else if (updatedUser.name != oldUser.name && updatedUser.pic != oldUser.pic) {
+      } else if (updatedUser.name != oldUser.name &&
+          updatedUser.pic != oldUser.pic) {
         updatedField = 'namePic';
-      } else if (updatedUser.name != oldUser.name && updatedUser.age != oldUser.age) {
+      } else if (updatedUser.name != oldUser.name &&
+          updatedUser.age != oldUser.age) {
         updatedField = 'nameAge';
       } else if (updatedUser.pic != temp && updatedUser.pic == null) {
         updatedField = 'RemovedPicture';
@@ -87,7 +93,7 @@ class MyController extends GetxController {
     }
   }
 
-  void removeUser (Eluser user){
+  void removeUser(Eluser user) {
     userList.remove(user);
     savePrefs();
     update();
@@ -95,7 +101,8 @@ class MyController extends GetxController {
 
   savePrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedData = userList.map((user) => jsonEncode(user.toJson())).toList();
+    List<String> encodedData =
+        userList.map((user) => jsonEncode(user.toJson())).toList();
     prefs.setStringList("users", encodedData);
   }
 
@@ -143,7 +150,8 @@ class MyController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // Convert list of updateMod objects to List<Map<String, dynamic>>
-    List<Map<String, dynamic>> jsonList = historyList.map((update) => update.toJson()).toList();
+    List<Map<String, dynamic>> jsonList =
+        historyList.map((update) => update.toJson()).toList();
 
     // Convert List<Map<String, dynamic>> to JSON string
     String jsonString = jsonEncode(jsonList);

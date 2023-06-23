@@ -31,7 +31,7 @@ class SearchUser extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     if (tappedUser != null) {
-      return Container(
+      return SizedBox(
         height: 145,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -65,6 +65,10 @@ class SearchUser extends SearchDelegate {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(width: 2)),
+                            child: const Icon(
+                              Icons.person,
+                              size: 90,
+                            ),
                           ),
                         ),
                   const SizedBox(
@@ -138,7 +142,8 @@ class SearchUser extends SearchDelegate {
       itemBuilder: (BuildContext context, int index) {
         Eluser user = query == ''
             ? gxc.userList[index]
-            : gxc.userList.firstWhere((user) => user.name == filterNames[index]);
+            : gxc.userList
+                .firstWhere((user) => user.name == filterNames[index]);
 
         return InkWell(
           onTap: () {
@@ -177,6 +182,10 @@ class SearchUser extends SearchDelegate {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(width: 2)),
+                              child: const Icon(
+                                Icons.person,
+                                size: 90,
+                              ),
                             ),
                           ),
                     const SizedBox(

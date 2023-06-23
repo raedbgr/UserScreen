@@ -4,6 +4,7 @@ import 'package:untitled/Home/my_controller.dart';
 import 'package:untitled/Models/updates.dart';
 
 class MyBotSheet extends StatefulWidget {
+  @override
   _MyBotSheetState createState() => _MyBotSheetState();
 }
 
@@ -12,7 +13,8 @@ class _MyBotSheetState extends State<MyBotSheet> {
 
   @override
   Widget build(BuildContext context) {
-    List<updateMod> reversedList = gxc.updateList.reversed.toList(); // Reverse the order of the list
+    List<updateMod> reversedList =
+        gxc.updateList.reversed.toList(); // Reverse the order of the list
 
     return BottomSheet(
       onClosing: () {},
@@ -27,21 +29,24 @@ class _MyBotSheetState extends State<MyBotSheet> {
                 padding: const EdgeInsets.all(5),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: const Text(
+                    const Expanded(
+                      child: Text(
                         'Update History',
                         textAlign: TextAlign.start,
                         style: TextStyle(color: Colors.white, fontSize: 24),
                       ),
                     ),
                     IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           // clear user update history
                           setState(() {
                             gxc.updateList.clear();
                           });
                         },
-                        icon: Icon(Icons.delete, color: Colors.white,))
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ))
                   ],
                 ),
               ),

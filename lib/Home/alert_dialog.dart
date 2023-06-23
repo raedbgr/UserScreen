@@ -29,79 +29,91 @@ class _AddUserDialogState extends State<AddUserDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Add user'),
-      content: GetBuilder<MyController>(
-        builder: (ctr) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  gxc.imageFile != null ? Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 2),
-                      image: DecorationImage(
-                        image: FileImage(gxc.imageFile!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ) : Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2),),
-                  ),
-                  const SizedBox(width: 20,),
-                  Column(
-                    children: [
-                      TextButton(
-                          onPressed:(){
-                            gxc.pickImageFromCamera();
-                          },
-                          child: gxc.isExist ? const Text("Change Image") : const Text("Add Image")
-                      ),
-                      // SizedBox(height: ,),
-                      if (gxc.isExist && gxc.imageFile != null)
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              gxc.temp = gxc.oldUser.pic;
-                              gxc.imageFile = null;
-                              gxc.oldUser.pic = null;
-                              gxc.userList[gxc.indx!].pic = null;
-                            });
-                          },
-                          child: const Text("Remove Image"),
+      content: GetBuilder<MyController>(builder: (ctr) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                gxc.imageFile != null
+                    ? Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 2),
+                          image: DecorationImage(
+                            image: FileImage(gxc.imageFile!),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 15,),
-              TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-              TextField(
-                keyboardType:TextInputType.number,
-                controller: _ageController,
-                decoration: const InputDecoration(labelText: 'Age'),
-              ),
-            ],
-          );
-        }
-      ),
+                      )
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 2),
+                        ),
+                        child: const Icon(
+                          Icons.person,
+                          size: 90,
+                        ),
+                      ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          gxc.pickImageFromCamera();
+                        },
+                        child: gxc.isExist
+                            ? const Text("Change Image")
+                            : const Text("Add Image")),
+                    // SizedBox(height: ,),
+                    if (gxc.isExist && gxc.imageFile != null)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            gxc.temp = gxc.oldUser.pic;
+                            gxc.imageFile = null;
+                            gxc.oldUser.pic = null;
+                            gxc.userList[gxc.indx!].pic = null;
+                          });
+                        },
+                        child: const Text("Remove Image"),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: _ageController,
+              decoration: const InputDecoration(labelText: 'Age'),
+            ),
+          ],
+        );
+      }),
       actions: [
         TextButton(
-            onPressed: (){
+            onPressed: () {
               // show updates related to this user only
               _showUserUpdates();
             },
-            child: Text('Show Updates')),
-        SizedBox(width: 10,),
+            child: const Text('Show Updates')),
+        const SizedBox(
+          width: 10,
+        ),
         TextButton(
           child: gxc.isExist ? const Text('Update') : const Text('Add'),
           onPressed: () async {
@@ -111,20 +123,37 @@ class _AddUserDialogState extends State<AddUserDialog> {
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               return; // return to User Model
-            }
-            else {
-              if (gxc.isExist){
-                gxc.updateUser(_nameController.text, int.parse(_ageController.text), gxc.imageFile,);
-                gxc.imageFile = null;
-                gxc.isExist = false;
+            } else {
+              if (gxc.isExist) {
+                if (_nameController.text != gxc.oldUser.name ||
+                    int.parse(_ageController.text) != gxc.oldUser.age ||
+                    gxc.imageFile != gxc.oldUser.pic) {
+                  gxc.updateUser(
+                    _nameController.text,
+                    int.parse(_ageController.text),
+                    gxc.imageFile,
+                  );
+                  gxc.imageFile = null;
+                  gxc.isExist = false;
+                } else {
+                  const snackBar = SnackBar(
+                    content: Text('You did not update anything!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               } else {
                 DateTime dateTime = DateTime.now();
 
-                String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+                String formattedDateTime =
+                    DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
-                gxc.addUser(_nameController.text, int.parse(_ageController.text), gxc.imageFile!, formattedDateTime);
-            }
-               Get.back();
+                gxc.addUser(
+                    _nameController.text,
+                    int.parse(_ageController.text),
+                    formattedDateTime,
+                    gxc.imageFile);
+              }
+              Get.back();
               await gxc.savePrefs();
             }
           },
@@ -157,8 +186,8 @@ class _AddUserDialogState extends State<AddUserDialog> {
                 width: double.infinity,
                 color: Colors.blue,
                 padding: const EdgeInsets.all(10),
-                child: Expanded(
-                  child: const Text(
+                child: const Expanded(
+                  child: Text(
                     'User History',
                     textAlign: TextAlign.start,
                     style: TextStyle(color: Colors.white, fontSize: 24),
@@ -182,6 +211,4 @@ class _AddUserDialogState extends State<AddUserDialog> {
       },
     );
   }
-
-
 }
